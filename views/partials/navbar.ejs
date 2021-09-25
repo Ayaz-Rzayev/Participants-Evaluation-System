@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/projects">Projects</a>
+        <a class="nav-link" href="/projects/new">Add Project</a>
+        <!-- <a class="nav-link" href="/rates">Rates</a> -->
+      </div>
+      <div class="navbar-nav">
+        <% if(!currentUser){ %> 
+          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="/register">Register</a>
+        <% } else{ %> 
+          <form class="nav-link form-logout" action="/logout" method="POST">
+            <button class="btn btn-logout">Log Out</button>
+          </form>
+        <% } %> 
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const navLinks = document.querySelectorAll('.nav-link');
+  window.addEventListener('load', function(){
+    for(let i=0; i < navLinks.length; i++){
+      if(navLinks[i].href === window.location.href){
+        navLinks[i].className += ' active'
+      }else{
+        navLinks[i].className = 'nav-link'
+      }
+    }
+  });
+</script>

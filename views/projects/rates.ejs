@@ -1,0 +1,57 @@
+<% layout('/layouts/boilerplate') -%>
+<div class="container overflow-auto"">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Project</th>
+        <th scope="col">Voter</th>
+        <th scope="col">Project Manager</th>
+        <th scope="col">Participant</th>
+        <th scope="col">Criteria 1</th>
+        <th scope="col">Criteria 2</th>
+        <th scope="col">Criteria 3</th>
+        <th scope="col">Criteria 4</th>
+        <th scope="col">Criteria 5</th>
+        <th scope="col">Criteria 6</th>
+        <th scope="col">Criteria 7</th>
+        <th scope="col">Criteria 8</th>
+        <th scope="col">Criteria 9</th>
+        <th scope="col">Criteria 10</th>
+        <th scope="col">Criteria 11</th>
+        <th scope="col">Criteria 12</th>
+        <th scope="col">Average</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(rate of rates) {%> 
+        <tr>
+          <td><%= rate.project.name %></td>
+          <td><%= rate.voter.username %></td>
+          <td>
+            <% for(pm of rate.project.pm) {%> 
+              <%=pm.username %>
+            <% } %> 
+          </td>
+       
+          <td><%= rate.votes.participant.username %></td>
+          <td><%= rate.votes.criteria1 %></td>
+          <td><%= rate.votes.criteria2 %></td>
+          <td><%= rate.votes.criteria3 %></td>
+          <td><%= rate.votes.criteria4 %></td>
+          <td><%= rate.votes.criteria5 %></td>
+          <td><%= rate.votes.criteria6 %></td>
+          <td><%= rate.votes.criteria7 %></td>
+          <td><%= rate.votes.criteria8 %></td>
+          <td><%= rate.votes.criteria9 %></td>
+          <td><%= rate.votes.criteria10 %></td>
+          <td><%= rate.votes.criteria11%></td>
+          <td><%= rate.votes.criteria12 %></td>
+          <td><%= rate.votes.average %></td>
+        </tr>
+      <% } %> 
+    </tbody>
+  </table>
+</div>
+<form action="/projects/<%= id %>/rates" method="POST">
+  <button type="submit">Submit</button>
+</form>

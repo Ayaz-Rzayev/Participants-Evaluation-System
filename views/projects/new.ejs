@@ -1,0 +1,51 @@
+<% layout('/layouts/boilerplate') -%>
+<div class="row justify-content-center align-items-center">
+	<form class="col-6 border my-3 p-3 form-validation" action="/projects" method="POST" novalidate>
+		<div class="mb-3">
+			<label for="projectName" class="form-label">Project Name</label>
+			<input type="text" name="project[name]" id="projectName" class="form-control" required>
+		</div>
+		<div class="mb-3">
+			<label for="projectId" class="form-label">Project ID</label>
+			<input type="text" name="project[projectId]" id="projectId" class="form-control" required>
+		</div>
+		<div class="mb-3">
+			<span>Project Manager</span>
+			<div class="position-relative my-3">
+				<input class="w-100 pm-search-input form-control" type="search" placeholder="Search Users">
+				<i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-2"></i>
+			</div>
+			<% for(user of users) {%>
+				<div class="pm-div">
+					<input type="checkbox" name="project[pm]" id="pm<%= user._id %>" value="<%= user._id %>">
+					<label class="pm-label" for="pm<%= user._id %>"><%= user.username %></label>
+				</div>
+			<% } %> 
+		</div>
+		<div class="mb-3">
+			<label for="sponsor" class="form-label">Sponsor</label>
+			<input type="text" name="project[sponsor]" id="sponsor" class="form-control" required>
+		</div>
+		<div class="mb-3">
+			<label for="priority" class="form-label">Priority</label>
+			<input type="number" name="project[priority]" id="priority" class="form-control" min="0" max="10" required>
+		</div>
+		
+		<div class="mb-3">
+			<span>Participants</span>
+			<div class="position-relative my-3">
+				<input class="w-100 participant-search-input form-control" type="search" placeholder="Search Users">
+				<i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-2"></i>
+			</div>
+			<% for(user of users) {%>
+				<div class="participant-div">
+					<input type="checkbox" name="project[participants]" id="participant<%= user._id %>" value="<%= user._id %>">
+					<label class="participant-label" for="participant<%= user._id %>"><%= user.username %></label>
+				</div>
+			<% } %> 
+		</div>
+		<button type="submit" class="btn btn-secondary">Submit</button>
+		<a class="btn btn-success" href="/projects">Back</a>
+	</form>
+</div>
+<script src="/js/searchbarUser.js"></script>

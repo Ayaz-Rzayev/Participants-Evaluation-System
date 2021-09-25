@@ -1,0 +1,155 @@
+<% layout('/layouts/boilerplate') -%>
+<div class="row justify-content-center">
+  <div class="col-md-8 text-center">
+    <h1><%= project.name %></h1>
+    <form action="/projects/rate" method="POST">
+      <input type="text" name="project" id="projectName" class="form-control d-none" value="<%= project._id %>" required>
+      <input type="text" name="voter" id="voter" class="form-control d-none" value="<%= currentUser %>" required>
+      <% for(pm of project.pm) { %>
+        <div class="border mb-2">
+          <div class="main-box border rounded p-2 d-flex justify-content-between align-items-center">
+            <input type="text" name="participants" id="participant" class="form-control d-none" value="<%= pm._id %>" required>
+            <%= pm.username %>
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="form-box border mb-3 d-none">
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria1" class="form-label">Islerin planlasdirma ve idare etme bacarigi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria1" id="criteria1" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria2" class="form-label">Gorulen isin keyfiyyeti(tamliq, seliqelik, deqiqlik, ceviklik)</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria2" id="criteria2" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria3" class="form-label">Komandani idare etme bacarigi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria3" id="criteria3" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria4" class="form-label">Qrupda islemek bacarigi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria4" id="criteria4" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria5" class="form-label">Oz isini basqasina izah ede bilme bacarigi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria5" id="criteria5" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria6" class="form-label">Qrup toplantilarinda istirak/gecikmeden istirak</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria6" id="criteria6" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria7" class="form-label">Qrup goruslerine hazirliq seviyyesi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria7" id="criteria7" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria8" class="form-label">Muzakireler zamani esas meselelere fokuslanmaq</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria8" id="criteria8" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria9" class="form-label">Tengid sorgulanmaya qarsi loyalliq</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria9" id="criteria9" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria10" class="form-label">layihe uzre nezerde tutulan aletlerdan istifade (Zoho)</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria10" id="criteria10" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria11" class="form-label">Layihe neticesine gosterdiyi tesir</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria11" id="criteria11" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria12" class="form-label">Yeniden onunla isleyerdiz?</label></div>
+              <div class="col-2">
+                <select class="form-select" type="text" name="criteria12" id="criteria12">
+                  <option value="yes">Beli</option>
+                  <option value="no">Xeyr</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } %>
+
+      <% for(participant of project.participants) { %>
+        <div class="border mb-2">
+          <div class="main-box border rounded p-2 d-flex justify-content-between align-items-center">
+            <input type="text" name="participants" id="participant" class="form-control d-none" value="<%= participant._id %>" required>
+            <%= participant.username %>
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="form-box border mb-3 d-none">
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria1" class="form-label">Texniki bilikler</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria1" id="criteria1" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria2" class="form-label">Gorulen isin keyfiyyeti(tamliq, seliqelik, deqiqlik, ceviklik)</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria2" id="criteria2" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria3" class="form-label">Tapsiriqlarin vaxtinda yerine yetirilmesi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria3" id="criteria3" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria4" class="form-label">Qrupda islemek bacarigi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria4" id="criteria4" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria5" class="form-label">Oz isini basqasina izah ede bilme bacarigi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria5" id="criteria5" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria6" class="form-label">Qrup toplantilarinda istirak/gecikmeden istirak</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria6" id="criteria6" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria7" class="form-label">Qrup goruslerine hazirliq seviyyesi</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria7" id="criteria7" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria8" class="form-label">Muzakireler zamani esas meselelere fokuslanmaq</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria8" id="criteria8" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria9" class="form-label">Tengid sorgulanmaya qarsi loyalliq</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria9" id="criteria9" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria10" class="form-label">layihe uzre nezerde tutulan aletlerdan istifade (Zoho)</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria10" id="criteria10" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria11" class="form-label">Layihe neticesine gosterdiyi tesir</label></div>
+              <div class="col-4"><input class="form-control" type="number" name="criteria11" id="criteria11" min="0" max="10"></div>
+            </div>
+            <div class="m-3 row align-items-center">
+              <div class="col-8"><label for="criteria12" class="form-label">Yeniden onunla isleyerdiz?</label></div>
+              <div class="col-2">
+                <select class="form-select" type="text" name="criteria12" id="criteria12">
+                  <option value="yes">Beli</option>
+                  <option value="no">Xeyr</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } %> 
+      
+      <button type="submit" class="btn btn-secondary">Submit</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const mainBoxes = document.querySelectorAll('.main-box')
+  const formBoxes = document.querySelectorAll('.form-box')
+  const formBoxIcons = document.querySelectorAll('.fa-plus')
+
+  for(let i = 0; i < mainBoxes.length; i++){
+    mainBoxes[i].addEventListener('click', function(){
+      formBoxes[i].classList.toggle('d-none')
+      formBoxIcons[i].classList.toggle('rotate-45')
+    })
+  }
+</script>
+

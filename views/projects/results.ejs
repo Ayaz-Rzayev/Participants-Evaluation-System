@@ -1,0 +1,32 @@
+<% layout('/layouts/boilerplate') -%>
+
+<div class="container overflow-auto"">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Project</th>
+        <th scope="col">Project Manager</th>
+        <th scope="col">Participant</th>
+        <th scope="col">Overall Average</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(average of averages) {%> 
+        <tr>
+          <td><%= average.project.name %></td>
+          <td>
+            <% for(pm of average.project.pm) {%> 
+              <%=pm.username %>
+            <% } %> 
+          </td>
+          <td><%= average.participant.username %></td>
+          <td>
+            <% const result = average.arrOfRates.reduce((a, b) => Number(a) + Number(b), null) / average.arrOfRates.length %> 
+          <%= result %> 
+          </td>
+        </tr>
+      <% } %> 
+    </tbody>
+  </table>
+</div>
+

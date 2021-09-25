@@ -1,0 +1,78 @@
+const express = require('express');
+const app = express();
+const PORT = 3000;
+const path = require('path');
+const mongoose = require('mongoose');
+const methodOverride = require('method-override');
+const engine = require('ejs-mate');
+// Error handling
+const ExpressError = require('./ExpressError');
+const catchAsync = require('./catchAsync');
+//Session
+const session = require('express-session');
+//Routes
+const projectsRoutes = require('./routes/projects');
+const userRoutes = require('./routes/users');
+ratesRoutes = require('./routes/rates');
+
+
+// Connect to MongoDB with Mongoose
+// 27017 is a default mongo port
+mongoose.connect('mongodb://localhost:27017/bankrespublika',{
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('DB connected')
+}).catch(err => {
+  console.log(err)
+})
+
+// Necessary adjustments
+app.engine('ejs', engine);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
+app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
+const sessionConfg = {
+  secret: 'password',
+  resave: false,
+  saveUninitialized: true,
+  cookie:{
+    expires: Date.now() + 1000 * 60 * 60 * 24 *7,
+    maxAge: 1000 * 60 * 60 * 24 *7
+  }
+}
+app.use(session(sessionConfg))
+app.use((req, res, next) => {
+  res.locals.currentUser = req.session.user_id
+  next()
+})
+
+// Routes
+// Home route
+app.get('/', (req, res) => {
+  res.render('home')
+});
+
+// Projects
+app.use('/projects', projectsRoutes)
+//User
+app.use(userRoutes)
+// app.use(ratesRoutes)
+
+
+// Error handling
+app.use((req, res, next)=>{
+  next(new ExpressError('Page not found', 404))
+});
+
+app.use((err, req, res, next) => {
+   const {status = 500, message = 'Something went wrong'} = err
+   res.status(status).render('error', {status, message})
+});
+
+//Server
+app.listen(PORT, ()=>{
+  console.log(`Listening on port ${PORT}`)
+});
