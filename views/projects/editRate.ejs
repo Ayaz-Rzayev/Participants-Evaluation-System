@@ -2,7 +2,7 @@
 <div class="row justify-content-center">
   <div class="col-md-8 text-center">
     <h1><%= project.name %></h1>
-    <form action="/projects/rate" method="POST">
+    <form action="/projects/<%= project._id %>/rate/edit?_method=PUT" method="POST">
       <input type="text" name="project" id="projectName" class="form-control d-none" value="<%= project._id %>" required>
       <input type="text" name="voter" id="voter" class="form-control d-none" value="<%= currentUser %>" required>
       <% for(pm of project.pm) { %>
