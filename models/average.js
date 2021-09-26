@@ -13,8 +13,4 @@ const averageSchema = new Schema({
   arrOfRates: [String]
 })
 
-averageSchema.methods.calcAverage = function() {
-  avg(this.arrOfRates)
-}
-
 module.exports = mongoose.model('Average', averageSchema)

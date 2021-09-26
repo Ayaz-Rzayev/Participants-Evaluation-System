@@ -10,7 +10,7 @@
 						<div><%= project.pm[i].username %></div>
 					<% } %> 
 				</h6>
-				<p class="card-text">To rate participants please click the button below</p>
+				<p class="card-text">To rate participants please click "Rate" button below</p>
 				<a href="/projects/<%= project._id %>/edit" class="btn btn-warning">Edit</a>
 				<form class="d-inline" action="/projects/<%= project._id%>?_method=DELETE" method="POST">
 					<button class="btn btn-danger">Delete</button>
@@ -18,6 +18,7 @@
 				<a href="/projects/<%= project._id %>/rate" class="btn btn-primary">Rate</a>
 				<a href="/projects/<%= project._id %>/rate/edit" class="btn btn-success">Edit Rate</a>
 				<a href="/projects/<%= project._id %>/rates" class="btn btn-primary">Rates</a>
+				<a href="/projects/<%= project._id %>/results" class="btn btn-primary">Results</a>
 			</div>
 		</div>
 	<% } %>

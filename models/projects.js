@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Rates = require('./rates');
+const AveragePoints = require('./average');
 
 const projectSchema = new Schema({
     name: {
@@ -27,6 +29,12 @@ const projectSchema = new Schema({
             type: Schema.Types.ObjectId, ref: 'User' 
         }
     ]
+})
+
+projectSchema.post('findOneAndDelete', async function(doc){
+    if(doc){
+        await Rates.deleteMany({project: doc._id})
+    }
 })
 
 module.exports = mongoose.model('Project', projectSchema);
