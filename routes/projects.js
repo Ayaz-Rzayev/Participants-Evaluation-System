@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 //Middleware
-const isLogedIn = require('../middleware')
+const {isLogedIn, isAdmin, validateProject}  = require('../middleware')
 // Error handling
 const ExpressError = require('../ExpressError');
 const catchAsync = require('../catchAsync');
@@ -10,63 +10,56 @@ const Project = require('../models/projects');
 const User = require('../models/user');
 const Rates = require('../models/rates');
 const AveragePoints = require('../models/average');
-// JOI server side validtion
-const {projectSchema} = require('../schemas');
+
 //Functions
 const avg = require('../functions');
-//Joi validation
-const validateProject = (req, res, next) => {
-  const {error} = projectSchema.validate(req.body)
-  if(error){
-    const msg = error.details.map(el => el.message).join(',')
-    throw new ExpressError(msg, 400)
-  }else {
-    next()
-  }
-}
 
 router.get('/', isLogedIn, catchAsync(async(req, res, next) => {
+  const currentUserId = req.session.user_id
+  const currentUser = await User.find({_id: currentUserId})
   const projects = await Project.find().populate('pm')
-  res.render('projects/allprojects', {projects})
+  res.render('projects/allprojects', {projects, currentUser})
 }));
 
-router.get('/new', isLogedIn, async (req, res) => {
+router.get('/new', isLogedIn, isAdmin, async (req, res) => {
   const users = await User.find()
   res.render('projects/new', {users})
 });
 
-router.post('/', isLogedIn, validateProject, catchAsync(async(req, res, next) => {
+router.post('/', isLogedIn, isAdmin, validateProject, catchAsync(async(req, res, next) => {
   const project = new Project(req.body.project)
   await project.save()
+  req.flash('success', 'Successfully created a Project')
   res.redirect('/projects')
 }));
 
-router.get('/:id/edit', isLogedIn, catchAsync(async(req, res, next) => {
+router.get('/:id/edit', isLogedIn, isAdmin, catchAsync(async(req, res, next) => {
 	const {id} = req.params
   const users = await User.find()
 	const project = await Project.findById(id).populate('participants').populate('pm')
 	res.render('projects/edit', {project, users})
 }));
 
-router.put('/:id', isLogedIn, validateProject, catchAsync(async(req, res, next) => {
+router.put('/:id', isLogedIn, isAdmin, validateProject, catchAsync(async(req, res, next) => {
 	const {id} = req.params
   const project = await Project.findByIdAndUpdate(id, {...req.body.project})
   await project.save()
   res.redirect('/projects')
 }));
 
-router.delete('/:id', isLogedIn, catchAsync(async (req, res, next) => {
+router.delete('/:id', isLogedIn, isAdmin, catchAsync(async (req, res, next) => {
 	const {id} = req.params
 	await Project.findByIdAndDelete(id)
+  req.flash('success', 'Successfully deleted a Project')
 	res.redirect('/projects')
 }));
 
 // Rate
+//add logic so only participants and admin can enter
 router.get('/:id/rate', isLogedIn, catchAsync(async(req, res, next) => {
 	const {id} = req.params
-  const currentUser = req.session.user_id
 	const project = await Project.findById(id).populate('participants').populate('pm')
-	res.render('projects/rate', {project, currentUser})
+	res.render('projects/rate', {project})
 }));
 
 router.post('/rate', isLogedIn, catchAsync(async(req, res, next) => {
@@ -115,7 +108,7 @@ router.get('/:id/rate/edit', isLogedIn, catchAsync(async(req, res, next) => {
   const currentUserString = String(currentUser)
 	const project = await Project.findById(id).populate('participants').populate('pm')
   const rates = await Rates.find({project: id, voter: currentUserString}).populate('project').populate({path: 'project', populate:{path: 'pm'}}).populate('voter').populate('votes.participant').populate('votes')
-	res.render('projects/editRate', {project, currentUser, rates})
+	res.render('projects/editRate', {project, rates})
 }));
 
 router.put('/:id/rate/edit', isLogedIn, catchAsync(async(req, res, next) => {
@@ -161,14 +154,14 @@ router.put('/:id/rate/edit', isLogedIn, catchAsync(async(req, res, next) => {
   res.redirect('/projects')
 }))
 
-router.get('/:id/rates', isLogedIn, catchAsync(async(req, res, next) => {
+router.get('/:id/rates', isLogedIn, isAdmin, catchAsync(async(req, res, next) => {
   const {id} = req.params
   const rates = await Rates.find({project: id}).populate('project').populate({path: 'project', populate:{path: 'pm'}}).populate('voter').populate('votes.participant').populate('votes')
   res.render('projects/rates', {rates, id})
 }));
 
 // Submit rates for average results
-router.post('/:id/rates', isLogedIn, catchAsync(async(req, res, next) => {
+router.post('/:id/rates', isLogedIn, isAdmin, catchAsync(async(req, res, next) => {
   const {id} = req.params
   const rates = await Rates.find({project: id}).populate('project').populate({path: 'project', populate:{path: 'pm'}}).populate('voter').populate('votes.participant').populate('votes')
   let averages = await AveragePoints.find({project: id}).populate('project').populate('participant')
@@ -210,7 +203,7 @@ router.post('/:id/rates', isLogedIn, catchAsync(async(req, res, next) => {
   res.redirect(`/projects/${id}/results`)
 }));
 
-router.get('/:id/results', isLogedIn, catchAsync(async(req, res, next) => {
+router.get('/:id/results', isLogedIn, isAdmin, catchAsync(async(req, res, next) => {
   const {id} = req.params
   const project = await Project.findById(id).populate('participants').populate('pm')
   const averages = await AveragePoints.find({project: id}).populate({path: 'project', populate:{path: 'pm'}}).populate('participant')

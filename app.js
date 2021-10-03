@@ -8,11 +8,14 @@ const engine = require('ejs-mate');
 // Error handling
 const ExpressError = require('./ExpressError');
 const catchAsync = require('./catchAsync');
+//Flash
+const flash = require('connect-flash')
 //Session
 const session = require('express-session');
 //Routes
 const projectsRoutes = require('./routes/projects');
 const userRoutes = require('./routes/users');
+const { connect } = require('http2');
 ratesRoutes = require('./routes/rates');
 
 
@@ -45,10 +48,16 @@ const sessionConfg = {
 }
 app.use(session(sessionConfg))
 app.use((req, res, next) => {
-  res.locals.currentUser = req.session.user_id
+  res.locals.currentUserId = req.session.user_id
   next()
 })
 
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success')
+  res.locals.error = req.flash('error')
+  next()
+})
 // Routes
 // Home route
 app.get('/', (req, res) => {

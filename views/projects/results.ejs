@@ -20,7 +20,7 @@
             <% } %> 
           </td>
           <td><%= average.participant.username %></td>
-          <td>
+          <td> 
             <% const result = average.arrOfRates.reduce((a, b) => Number(a) + Number(b), null) / average.arrOfRates.length %> 
           <%= result %> 
           </td>

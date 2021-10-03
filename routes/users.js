@@ -3,6 +3,8 @@ const router = express.Router();
 // Error handling
 const ExpressError = require('../ExpressError');
 const catchAsync = require('../catchAsync');
+//Middleware
+const {isLogedIn, isAdmin}  = require('../middleware')
 // Schemas
 const User = require('../models/user');
 //Bcrypt
@@ -11,6 +13,19 @@ const saltRounds = 12;
 //Session
 const session = require('express-session');
 
+router.get('/users', isLogedIn, isAdmin, catchAsync(async(req, res, next) => {
+  const users = await User.find()
+  res.render('users/users', {users})
+}))
+
+router.put('/users/:id', isLogedIn, isAdmin, catchAsync(async(req, res, next) => {
+  const {id} = req.params
+  const user = await User.findById(id)
+  user.isAdmin = true
+  await user.save()
+  const users = await User.find()
+  res.render('users/users', {users})
+}))
 
 router.get('/register', (req, res) => {
   res.render('users/register')

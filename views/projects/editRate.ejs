@@ -4,7 +4,7 @@
     <h1><%= project.name %></h1>
     <form action="/projects/<%= project._id %>/rate/edit?_method=PUT" method="POST">
       <input type="text" name="project" id="projectName" class="form-control d-none" value="<%= project._id %>" required>
-      <input type="text" name="voter" id="voter" class="form-control d-none" value="<%= currentUser %>" required>
+      <input type="text" name="voter" id="voter" class="form-control d-none" value="<%= currentUserId %>" required>
       <% for(pm of project.pm) { %>
         <div class="border mb-2">
           <div class="main-box border rounded p-2 d-flex justify-content-between align-items-center">
