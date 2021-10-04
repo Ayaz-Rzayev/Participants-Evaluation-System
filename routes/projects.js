@@ -164,44 +164,40 @@ router.get('/:id/rates', isLogedIn, isAdmin, catchAsync(async(req, res, next) =>
 router.post('/:id/rates', isLogedIn, isAdmin, catchAsync(async(req, res, next) => {
   const {id} = req.params
   const rates = await Rates.find({project: id}).populate('project').populate({path: 'project', populate:{path: 'pm'}}).populate('voter').populate('votes.participant').populate('votes')
-  let averages = await AveragePoints.find({project: id}).populate('project').populate('participant')
-  let arrOfAverageId = []
+  let arrOfParticipants = []
   for(let rate of rates){
     if(!rate.votes.participant.equals(rate.voter)){
-      if(averages.length){
-        for (let average of averages){
-          arrOfAverageId.push(String(average.participant._id))
-        }
-        if(!arrOfAverageId.includes(String(rate.votes.participant._id))){
+      if(arrOfParticipants.length){
+        if(!arrOfParticipants.includes(String(rate.votes.participant._id))){
           const averagePoint = new AveragePoints({
                 project: rate.project,
                 participant: rate.votes.participant,
                 arrOfRates: rate.votes.average
           })
           await averagePoint.save()
+          arrOfParticipants.push(String(rate.votes.participant._id))
           continue
         }
-        for (let average of averages){
-          if(String(average.participant._id) === String(rate.votes.participant._id)){
-            const doc = await AveragePoints.find({participant: rate.votes.participant})
-            doc[0].arrOfRates.push(rate.votes.average)
-            await doc[0].save()
-            continue
+        if(arrOfParticipants.includes(String(rate.votes.participant._id))){
+          const doc = await AveragePoints.find({participant: rate.votes.participant})
+          doc[0].arrOfRates.push(rate.votes.average)
+          await doc[0].save()
         }
-      }
       }else{
         const averagePoint = new AveragePoints({
               project: rate.project,
               participant: rate.votes.participant,
               arrOfRates: rate.votes.average
         })
-        await averagePoint.save()  
+        await averagePoint.save()
+        arrOfParticipants.push(String(rate.votes.participant._id))
       }
-      averages = await AveragePoints.find({project: id})
     }
   }
+  //res.send(averages)
   res.redirect(`/projects/${id}/results`)
 }));
+
 
 router.get('/:id/results', isLogedIn, isAdmin, catchAsync(async(req, res, next) => {
   const {id} = req.params

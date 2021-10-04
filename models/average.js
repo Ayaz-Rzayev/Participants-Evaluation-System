@@ -10,7 +10,7 @@ const averageSchema = new Schema({
   participant: {
     type: Schema.Types.ObjectId, ref: 'User'
   },
-  arrOfRates: [String]
+  arrOfRates: [String],
 })
 
 module.exports = mongoose.model('Average', averageSchema)
