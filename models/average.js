@@ -11,6 +11,9 @@ const averageSchema = new Schema({
     type: Schema.Types.ObjectId, ref: 'User'
   },
   arrOfRates: [String],
+  pmRate: {
+    type: [String]
+  }
 })
 
 module.exports = mongoose.model('Average', averageSchema)

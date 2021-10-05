@@ -166,31 +166,74 @@ router.post('/:id/rates', isLogedIn, isAdmin, catchAsync(async(req, res, next) =
   const rates = await Rates.find({project: id}).populate('project').populate({path: 'project', populate:{path: 'pm'}}).populate('voter').populate('votes.participant').populate('votes')
   let arrOfParticipants = []
   for(let rate of rates){
+    //check if the rate is rate to voter himself
     if(!rate.votes.participant.equals(rate.voter)){
-      if(arrOfParticipants.length){
-        if(!arrOfParticipants.includes(String(rate.votes.participant._id))){
+      //check if voter is a pm
+      if(rate.voter.equals(rate.project.pm[0])){
+        //if there are any avg docs
+        if(arrOfParticipants.length){
+          //if we didnt create avg doc for this participant create one and add pmMark
+          if(!arrOfParticipants.includes(String(rate.votes.participant._id))){
+            const averagePoint = new AveragePoints({
+                  project: rate.project,
+                  participant: rate.votes.participant,
+                  pmRate: rate.votes.average
+            })
+            await averagePoint.save()
+            //add participant to array of participants so next time we will not create his avg again
+            arrOfParticipants.push(String(rate.votes.participant._id))
+            continue
+          }
+          //if there is an average for the participant find it and add pmMark
+          if(arrOfParticipants.includes(String(rate.votes.participant._id))){
+            const doc = await AveragePoints.find({participant: rate.votes.participant})
+            doc[0].pmRate.push(rate.votes.average)
+            await doc[0].save()
+          }
+          //if there is no avg docs create one for the participant and add pmMark
+        }else{
+          const averagePoint = new AveragePoints({
+                project: rate.project,
+                participant: rate.votes.participant,
+                pmRate: rate.votes.average
+          })
+          await averagePoint.save()
+          //add participant to array of participants so next time we will not create his avg again
+          arrOfParticipants.push(String(rate.votes.participant._id))
+        }
+        //if the voter is not PM
+      }else{
+        //if there are any avg docs
+        if(arrOfParticipants.length){
+          //if we didnt create avg doc for this participant create one and add rate to arrOfRates
+          if(!arrOfParticipants.includes(String(rate.votes.participant._id))){
+            const averagePoint = new AveragePoints({
+                  project: rate.project,
+                  participant: rate.votes.participant,
+                  arrOfRates: rate.votes.average
+            })
+            await averagePoint.save()
+            //add participant to array of participants so next time we will not create his avg again
+            arrOfParticipants.push(String(rate.votes.participant._id))
+            continue
+          }
+          //if there is an average for the participant find it and add rate to arrOfRates
+          if(arrOfParticipants.includes(String(rate.votes.participant._id))){
+            const doc = await AveragePoints.find({participant: rate.votes.participant})
+            doc[0].arrOfRates.push(rate.votes.average)
+            await doc[0].save()
+          }
+          //if there is no avg docs create one for the participant and add rate to arrOfRates
+        }else{
           const averagePoint = new AveragePoints({
                 project: rate.project,
                 participant: rate.votes.participant,
                 arrOfRates: rate.votes.average
           })
           await averagePoint.save()
+          //add participant to array of participants so next time we will not create his avg again
           arrOfParticipants.push(String(rate.votes.participant._id))
-          continue
         }
-        if(arrOfParticipants.includes(String(rate.votes.participant._id))){
-          const doc = await AveragePoints.find({participant: rate.votes.participant})
-          doc[0].arrOfRates.push(rate.votes.average)
-          await doc[0].save()
-        }
-      }else{
-        const averagePoint = new AveragePoints({
-              project: rate.project,
-              participant: rate.votes.participant,
-              arrOfRates: rate.votes.average
-        })
-        await averagePoint.save()
-        arrOfParticipants.push(String(rate.votes.participant._id))
       }
     }
   }

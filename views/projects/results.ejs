@@ -7,7 +7,9 @@
         <th scope="col">Project</th>
         <th scope="col">Project Manager</th>
         <th scope="col">Participant</th>
-        <th scope="col">Overall Average</th>
+        <th scope="col">Average Point form Team</th>
+        <th scope="col">Point form PM</th>
+        <th scope="col">Total Score</th>
       </tr>
     </thead>
     <tbody>
@@ -21,8 +23,19 @@
           </td>
           <td><%= average.participant.username %></td>
           <td> 
-            <% const result = average.arrOfRates.reduce((a, b) => Number(a) + Number(b), null) / average.arrOfRates.length %> 
-          <%= result %> 
+            <% const resultTeam = average.arrOfRates.reduce((a, b) => Number(a) + Number(b), null) / average.arrOfRates.length %> 
+          <%= resultTeam %> 
+          </td>
+          <td>
+            <%= average.pmRate %> 
+          </td>
+          <td>
+            <% if(average.pmRate.length) {%> 
+              <% const result = (resultTeam + average.pmRate.reduce((a, b) => Number(a) + Number(b), null) / average.pmRate.length) / 2 %> 
+              <%= result %>
+            <% }else{ %>
+              <%= resultTeam %>
+            <% } %>   
           </td>
         </tr>
       <% } %> 
