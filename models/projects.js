@@ -36,6 +36,7 @@ const projectSchema = new Schema({
 projectSchema.post('findOneAndDelete', async function(doc){
     if(doc){
         await Rates.deleteMany({project: doc._id})
+        await AveragePoints.deleteMany({project: doc._id})
     }
 })
 

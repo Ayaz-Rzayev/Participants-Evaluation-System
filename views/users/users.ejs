@@ -13,7 +13,7 @@
               <div class="card-body">
                 <h5 class="card-title"><%= user.username %></h5>
                 <p class="card-text">E-mail: <%= user.email %></p>
-                <form class="d-inline" action="/users/<%= user._id%>?_method=PUT" method="POST">
+                <form class="d-inline" action="/users/<%= user._id%>/admin?_method=PUT" method="POST">
                   <button class="btn btn-primary">Make an Admin</button>
                 </form>
               </div>
