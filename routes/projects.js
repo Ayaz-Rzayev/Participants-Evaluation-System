@@ -12,7 +12,7 @@ const Rates = require('../models/rates');
 const AveragePoints = require('../models/average');
 
 //Functions
-const avg = require('../functions');
+const {avg} = require('../functions');
 
 router.get('/', isLogedIn, catchAsync(async(req, res, next) => {
   const currentUserId = req.session.user_id

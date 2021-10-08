@@ -3,14 +3,17 @@ const Schema = mongoose.Schema;
 
 const ratesSchema = new Schema({
   voter: {
-    type: Schema.Types.ObjectId, ref: 'User' 
+    type: Schema.Types.ObjectId,
+    ref: 'User' 
   },
   project: {
-    type: Schema.Types.ObjectId, ref: 'Project' 
+    type: Schema.Types.ObjectId,
+    ref: 'Project' 
   },
   votes:{
     participant:{
-      type: Schema.Types.ObjectId, ref: 'User'
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     },
     criteria1: Number, 
     criteria2: Number, 

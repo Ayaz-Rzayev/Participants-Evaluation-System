@@ -5,6 +5,8 @@ const userSchema = new Schema({
   username:{
     type: String,
     required: true,
+    min:3,
+    max: 25,
     unique:true
   },
   email:{
@@ -19,7 +21,12 @@ const userSchema = new Schema({
   isAdmin:{
     type: Boolean,
     default: false
+  },
+  verified: {
+    type: Boolean,
+    default: false
   }
 })
 
 module.exports = mongoose.model('User', userSchema);
+

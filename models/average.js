@@ -5,10 +5,12 @@ const avg = require('../functions');
 
 const averageSchema = new Schema({
   project:{
-    type: Schema.Types.ObjectId, ref: 'Project' 
+    type: Schema.Types.ObjectId,
+    ref: 'Project' 
   },
   participant: {
-    type: Schema.Types.ObjectId, ref: 'User'
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
   arrOfRates: [String],
   pmRate: {

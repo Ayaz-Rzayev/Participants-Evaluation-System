@@ -13,7 +13,8 @@ const projectSchema = new Schema({
     },
     pm: [
         {
-            type: Schema.Types.ObjectId, ref: 'User' 
+            type: Schema.Types.ObjectId,
+            ref: 'User' 
         }
     ],
     sponsor: {
@@ -26,7 +27,8 @@ const projectSchema = new Schema({
     },
     participants: [
         {
-            type: Schema.Types.ObjectId, ref: 'User' 
+            type: Schema.Types.ObjectId,
+            ref: 'User' 
         }
     ]
 })

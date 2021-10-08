@@ -1,5 +1,5 @@
 // JOI schema
-const {projectSchema} = require('./schemas');
+const {projectSchema, userSchema} = require('./schemas');
 const ExpressError = require('./ExpressError');
 const User = require('./models/user');
 
@@ -23,12 +23,32 @@ module.exports.isLogedIn = (req, res, next) => {
   next()
 }
 
+module.exports.isVerified = async (req, res, next) => {
+  const user = await User.findById(req.session.user_id)
+  if(!user.verified) {
+      req.flash('error','Please validate your e-mail adress')
+      return res.redirect('/login')
+    }
+  next()
+}
+
+
 module.exports.validateProject = (req, res, next) => {
   const {error} = projectSchema.validate(req.body)
   if(error){
     const msg = error.details.map(el => el.message).join(',')
     throw new ExpressError(msg, 400)
   }else {
+    next()
+  }
+}
+
+module.exports.validateUser = (req, res, next) => {
+  const {error} = userSchema.validate(req.body)
+  if(error){
+    const msg = error.details.map(el => el.message).join(',')
+    throw new ExpressError(msg, 400)
+  }else{
     next()
   }
 }

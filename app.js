@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const path = require('path');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const engine = require('ejs-mate');
+//load environment variables from a .env file.
+require('dotenv').config();
 // Error handling
 const ExpressError = require('./ExpressError');
 const catchAsync = require('./catchAsync');
@@ -21,7 +23,7 @@ ratesRoutes = require('./routes/rates');
 
 // Connect to MongoDB with Mongoose
 // 27017 is a default mongo port
-mongoose.connect('mongodb://localhost:27017/bankrespublika',{
+mongoose.connect(process.env.DB,{
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
