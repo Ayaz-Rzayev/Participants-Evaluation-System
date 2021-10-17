@@ -32,8 +32,8 @@ router.route('/:id')
   .delete(isLogedIn, isAdmin, deleteProject);
 
 // Rate
-//add logic so only participants and admin can enter
-router.get('/:id/rate', isLogedIn, renderRate);
+//add logic so only participants and admin can enter --done in view
+router.get('/:id/rate', isLogedIn,  renderRate);
 
 router.post('/rate', isLogedIn, rate);
 

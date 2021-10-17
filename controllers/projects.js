@@ -55,11 +55,14 @@ module.exports.rate = catchAsync(async(req, res, next) => {
   // insert into rateSchema
   const{project, voter, participants, criteria1, criteria2, criteria3, criteria4, criteria5, criteria6, criteria7, criteria8,criteria9, criteria10, criteria11, criteria12} = req.body
 
-  for(let i= 0; i < participants.length; i++){
+  for (let i= 0; i < participants.length; i++)
+  {
     const criteriasPlain = [criteria1[i], criteria2[i], criteria3[i], criteria4[i], criteria5[i], criteria6[i], criteria7[i], criteria8[i], criteria9[i], criteria10[i]]
     const criterias = []
-    for(let j = 0; j < criteriasPlain.length; j++){
-      if(criteriasPlain[j]){
+    for (let j = 0; j < criteriasPlain.length; j++)
+    {
+      if (criteriasPlain[j])
+      {
         criterias.push(parseInt(criteriasPlain[j]))
       }
     }
@@ -104,14 +107,18 @@ module.exports.editRate = catchAsync(async(req, res, next) => {
   const currentUser = req.session.user_id
   const currentUserString = String(currentUser)
   const{project, voter, participants, criteria1, criteria2, criteria3, criteria4, criteria5, criteria6, criteria7, criteria8,criteria9, criteria10, criteria11, criteria12} = req.body
-  for(let participant of participants){
+  for (let participant of participants)
+  {
     await Rates.findOneAndDelete({"votes.participant": participant, project: id, voter: currentUserString})
   }
-  for(let i= 0; i < participants.length; i++){
+  for (let i= 0; i < participants.length; i++)
+  {
     const criteriasPlain = [criteria1[i], criteria2[i], criteria3[i], criteria4[i], criteria5[i], criteria6[i], criteria7[i], criteria8[i], criteria9[i], criteria10[i]]
     const criterias = []
-    for(let j = 0; j < criteriasPlain.length; j++){
-      if(criteriasPlain[j]){
+    for (let j = 0; j < criteriasPlain.length; j++)
+    {
+      if (criteriasPlain[j])
+      {
         criterias.push(parseInt(criteriasPlain[j]))
       }
     }
@@ -152,15 +159,20 @@ module.exports.submitRates = catchAsync(async(req, res, next) => {
   const {id} = req.params
   const rates = await Rates.find({project: id}).populate('project').populate({path: 'project', populate:{path: 'pm'}}).populate('voter').populate('votes.participant').populate('votes')
   let arrOfParticipants = []
-  for(let rate of rates){
+  for (let rate of rates)
+  {
     //check if the rate is rate to voter himself
-    if(!rate.votes.participant.equals(rate.voter)){
+    if (!rate.votes.participant.equals(rate.voter))
+    {
       //check if voter is a pm
-      if(rate.voter.equals(rate.project.pm[0])){
+      if (rate.voter.equals(rate.project.pm[0]))
+      {
         //if there are any avg docs
-        if(arrOfParticipants.length){
+        if (arrOfParticipants.length)
+        {
           //if we didnt create avg doc for this participant create one and add pmMark
-          if(!arrOfParticipants.includes(String(rate.votes.participant._id))){
+          if (!arrOfParticipants.includes(String(rate.votes.participant._id)))
+          {
             const averagePoint = new AveragePoints({
                   project: rate.project,
                   participant: rate.votes.participant,
@@ -172,13 +184,16 @@ module.exports.submitRates = catchAsync(async(req, res, next) => {
             continue
           }
           //if there is an average for the participant find it and add pmMark
-          if(arrOfParticipants.includes(String(rate.votes.participant._id))){
+          if (arrOfParticipants.includes(String(rate.votes.participant._id)))
+          {
             const doc = await AveragePoints.find({participant: rate.votes.participant, project: id})
             doc[0].pmRate.push(rate.votes.average)
             await doc[0].save()
           }
           //if there is no avg docs create one for the participant and add pmMark
-        }else{
+        }
+        else
+        {
           const averagePoint = new AveragePoints({
                 project: rate.project,
                 participant: rate.votes.participant,
@@ -189,11 +204,15 @@ module.exports.submitRates = catchAsync(async(req, res, next) => {
           arrOfParticipants.push(String(rate.votes.participant._id))
         }
         //if the voter is not PM
-      }else{
+      }
+      else
+      {
         //if there are any avg docs
-        if(arrOfParticipants.length){
+        if (arrOfParticipants.length)
+        {
           //if we didnt create avg doc for this participant create one and add rate to arrOfRates
-          if(!arrOfParticipants.includes(String(rate.votes.participant._id))){
+          if (!arrOfParticipants.includes(String(rate.votes.participant._id)))
+          {
             const averagePoint = new AveragePoints({
                   project: rate.project,
                   participant: rate.votes.participant,
@@ -205,7 +224,8 @@ module.exports.submitRates = catchAsync(async(req, res, next) => {
             continue
           }
           //if there is an average for the participant find it and add rate to arrOfRates
-          if(arrOfParticipants.includes(String(rate.votes.participant._id))){
+          if (arrOfParticipants.includes(String(rate.votes.participant._id)))
+          {
             const doc = await AveragePoints.find({participant: rate.votes.participant, project: id})
             doc[0].arrOfRates.push(rate.votes.average)
             // console.log(rate.voter.username)
@@ -214,7 +234,9 @@ module.exports.submitRates = catchAsync(async(req, res, next) => {
             // console.log(doc[0].arrOfRates)
           }
           //if there is no avg docs create one for the participant and add rate to arrOfRates
-        }else{
+        }
+        else
+        {
           const averagePoint = new AveragePoints({
                 project: rate.project,
                 participant: rate.votes.participant,

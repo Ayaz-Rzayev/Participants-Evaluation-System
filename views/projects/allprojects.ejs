@@ -1,27 +1,29 @@
 <% layout('/layouts/boilerplate') -%>
 <main class="container">
 	<% for(project of projects){%>
-		<div class="card col-6 my-3 mx-auto">
-			<div class="card-body">	
-				<h5 class="card-title"><%= project.name %></h5>
-				<h6 class="card-subtitle mb-2 text-muted">
-					Project Manager(s):
-					<% for(let pm of project.pm){%>
-						<div><%= pm.username %></div>
+		<% if(project.participants.includes(currentUser[0]._id) || String(currentUser[0]._id) === String(project.pm[0]._id) || currentUser[0].isAdmin ) { %>
+			<div class="card col-6 my-3 mx-auto">
+				<div class="card-body">	
+					<h5 class="card-title"><%= project.name %></h5>
+					<h6 class="card-subtitle mb-2 text-muted">
+						Project Manager(s):
+						<% for(let pm of project.pm){%>
+							<div><%= pm.username %></div>
+						<% } %> 
+					</h6>
+					<p class="card-text">To rate participants please click "Rate" button below</p>
+					<% if(currentUser[0].isAdmin) {%> 
+						<a href="/projects/<%= project._id %>/edit" class="btn btn-warning">Edit Project</a>
+						<form class="d-inline" action="/projects/<%= project._id%>?_method=DELETE" method="POST">
+							<button class="btn btn-danger">Delete Project</button>
+						</form>
+						<a href="/projects/<%= project._id %>/rates" class="btn btn-primary">Rates</a>
+						<a href="/projects/<%= project._id %>/results" class="btn btn-primary">Results</a>
 					<% } %> 
-				</h6>
-				<p class="card-text">To rate participants please click "Rate" button below</p>
-				<% if(currentUser[0].isAdmin) {%> 
-					<a href="/projects/<%= project._id %>/edit" class="btn btn-warning">Edit Project</a>
-					<form class="d-inline" action="/projects/<%= project._id%>?_method=DELETE" method="POST">
-						<button class="btn btn-danger">Delete Project</button>
-					</form>
-					<a href="/projects/<%= project._id %>/rates" class="btn btn-primary">Rates</a>
-					<a href="/projects/<%= project._id %>/results" class="btn btn-primary">Results</a>
-				<% } %> 
-				<a href="/projects/<%= project._id %>/rate" class="btn btn-primary">Rate</a>
-				<a href="/projects/<%= project._id %>/rate/edit" class="btn btn-success">Edit Rate</a>
+					<a href="/projects/<%= project._id %>/rate" class="btn btn-primary">Rate</a>
+					<a href="/projects/<%= project._id %>/rate/edit" class="btn btn-success">Edit Rate</a>
+				</div>
 			</div>
-		</div>
+		<% } %> 
 	<% } %>
 </main>

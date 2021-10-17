@@ -18,7 +18,8 @@ module.exports.renderRegisterForm = (req, res) => {
 module.exports.createUser = catchAsync(async(req, res, next) => {
   const {username, email, password} = req.body.user
   let user = await User.findOne({email: email})
-  if(user){
+  if (user)
+  {
     throw new ExpressError('User with given e-mail already exists', 400)
   }
   const salt = await bcrypt.genSalt(saltRounds);
@@ -41,11 +42,13 @@ module.exports.createUser = catchAsync(async(req, res, next) => {
 module.exports.verifyUser = catchAsync(async(req, res, next) => {
   const {id, token} = req.params
   const user = await User.findById(id)
-  if(!user){
+  if (!user)
+  {
     throw new ExpressError('Invalid', 400)
   }
   const foundToken = await Token.findOne({userId: user._id, token: token})
-  if(!foundToken){
+  if (!foundToken)
+  {
     throw new ExpressError('Invalid', 400)
   }
   user.verified = true
@@ -62,16 +65,20 @@ module.exports.login = catchAsync(async(req, res, next) => {
   const {username, password} = req.body.user
   const user = await User.find({username: username})
   //if user didn't verified his e-mail ask to do so
-  if(!user[0].verified) {
+  if (!user[0].verified)
+  {
       req.flash('error','Please verify your e-mail adress')
       return res.redirect('/login')
   }
   const foundUser = await User.findOne({username})
   const validPassword = await bcrypt.compare(password, foundUser.password)
-  if(validPassword){
+  if (validPassword)
+  {
     req.session.user_id = foundUser._id
     res.redirect('/projects')
-  }else{
+  }
+  else
+  {
     res.send('Nope')
   }
 })
