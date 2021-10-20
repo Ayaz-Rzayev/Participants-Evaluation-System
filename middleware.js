@@ -2,7 +2,6 @@
 const {projectSchema, userSchema} = require('./schemas');
 const ExpressError = require('./ExpressError');
 const User = require('./models/user');
-const Project = require('./models/projects');
 
 module.exports.isAdmin = async(req, res, next) => {
   const id = req.session.user_id

@@ -9,7 +9,6 @@ const engine = require('ejs-mate');
 require('dotenv').config();
 // Error handling
 const ExpressError = require('./ExpressError');
-const catchAsync = require('./catchAsync');
 //Flash
 const flash = require('connect-flash')
 //Session
@@ -17,7 +16,6 @@ const session = require('express-session');
 //Routes
 const projectsRoutes = require('./routes/projects');
 const userRoutes = require('./routes/users');
-const { connect } = require('http2');
 ratesRoutes = require('./routes/rates');
 
 
@@ -39,6 +37,7 @@ app.set('views', path.join(__dirname, '/views'));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
+
 const sessionConfg = {
   secret: 'password',
   resave: false,

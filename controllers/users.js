@@ -15,7 +15,9 @@ const saltRounds = 12;
 module.exports.renderRegisterForm = (req, res) => {
   res.render('users/register')
 }
+
 module.exports.createUser = catchAsync(async(req, res, next) => {
+  const profilePic = req.file.filename
   const {username, email, password} = req.body.user
   let user = await User.findOne({email: email})
   if (user)
@@ -27,7 +29,8 @@ module.exports.createUser = catchAsync(async(req, res, next) => {
   user = await new User({
     username,
     email,
-    password:hashedPw
+    password:hashedPw,
+    profilePic
   }).save()
   let token = await new Token({
     userId: user._id,
