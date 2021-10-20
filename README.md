@@ -16,7 +16,7 @@ Languages and Frameworks used are listed below:
   •	MongooseODM
 
 Bcrypt was used for password hashing
-And Crpto was used for Token generation 
+And Crypto was used for Token generation 
 
 Main function of the application is to give participants opportunity to evaluate each other based on the performance in 12 different criteria.
 Those marks are used to calculate average score for each participant.
